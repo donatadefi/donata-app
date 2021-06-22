@@ -1,0 +1,23 @@
+.Sidebar {
+  min-height: 100vh;
+  background: rgb(54, 179, 223);
+  background: linear-gradient(
+    349deg,
+    rgba(54, 179, 223, 1) 0%,
+    rgba(5, 64, 108, 1) 100%
+  );
+  width: 280px;
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+    img {
+      width: 45px;
+      margin-right: 10px;
+    }
+    h3 {
+      color: #ffffff;
+    }
+  }
+}
