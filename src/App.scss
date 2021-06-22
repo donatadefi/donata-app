@@ -4,3 +4,12 @@
   text-decoration: none;
   font-family: 'IBM Plex Sans', sans-serif;
 }
+
+.App {
+  .parent-flex {
+    display: flex;
+    .parent-right {
+      width: 100%;
+    }
+  }
+}
