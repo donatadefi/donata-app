@@ -14,7 +14,7 @@ function App() {
   const [account, setAccount] = useState('');
 
   useEffect(() => {
-    //hide button if account already connected
+    //this checks whether the account already connected or not
     ethereum.request({ method: 'eth_accounts' }).then((addr) => {
       if (addr.length > 0) {
         setAccount(addr[0]);

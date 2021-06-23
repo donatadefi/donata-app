@@ -7,7 +7,6 @@ function Topbar({ initAccount }) {
   const [account, setAccount] = useState('');
 
   useEffect(() => {
-    //hide button if account already connected
     ethereum.request({ method: 'eth_accounts' }).then((addr) => {
       if (addr.length > 0) {
         setAccount(addr[0]);

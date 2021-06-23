@@ -5,13 +5,17 @@ import Dashboard from '../Dashboard/Dashboard';
 import Setting from '../Setting/Setting';
 import './Main.scss';
 
-function Main() {
+function Main({ account }) {
   return (
     <div className="Main">
-      <Switch>
-        <Route exact path="/" component={Dashboard} />
-        <Route path="/setting" component={Setting} />
-      </Switch>
+      {account ? (
+        <Switch>
+          <Route exact path="/" component={Dashboard} />
+          <Route path="/setting" component={Setting} />
+        </Switch>
+      ) : (
+        <p className="connect-notif">Please connect your metamask wallet</p>
+      )}
     </div>
   );
 }

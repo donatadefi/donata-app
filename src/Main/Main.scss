@@ -1,3 +1,12 @@
 .Main {
   padding: 25px;
+  .connect-notif {
+    position: absolute;
+    top: 50%;
+    left: calc(43% + 250px);
+    color: #c1c1c1;
+    font-size: 24px;
+    font-weight: 600;
+    transform: translate(-50%, -50%);
+  }
 }
