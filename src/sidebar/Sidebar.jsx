@@ -12,7 +12,9 @@ function Sidebar() {
         <h3>DONATA</h3>
       </div>
       <div className="sidebar-menu">
-        <NavLink to="/">Dashboard</NavLink>
+        <NavLink exact to="/">
+          Dashboard
+        </NavLink>
         <NavLink to="/setting">Setting</NavLink>
       </div>
     </div>
