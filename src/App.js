@@ -1,3 +1,6 @@
+
+import React, { useState, useEffect } from 'react';
+
 import { BrowserRouter } from 'react-router-dom';
 
 import Sidebar from './sidebar/Sidebar';
@@ -7,6 +10,22 @@ import Main from './Main/Main';
 import './App.scss';
 
 function App() {
+  const { ethereum } = window;
+  const [account, setAccount] = useState('');
+
+  useEffect(() => {
+    //hide button if account already connected
+    ethereum.request({ method: 'eth_accounts' }).then((addr) => {
+      if (addr.length > 0) {
+        setAccount(addr[0]);
+      }
+    });
+  }, []);
+
+  const initAccount = (acc) => {
+    setAccount(acc);
+  };
+
   return (
     <BrowserRouter>
       <div className="App">
@@ -15,8 +34,8 @@ function App() {
             <Sidebar></Sidebar>
           </div>
           <div className="parent-right">
-            <TopBar></TopBar>
-            <Main></Main>
+            <TopBar initAccount={initAccount}></TopBar>
+            <Main account={account}></Main>
           </div>
         </div>
       </div>
