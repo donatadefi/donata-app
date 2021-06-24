@@ -14,7 +14,7 @@ function Main({ account }) {
           <Route path="/setting" component={Setting} />
         </Switch>
       ) : (
-        <p className="connect-notif">Please connect your metamask wallet</p>
+        <p className="connect-notif">Please connect your wallet</p>
       )}
     </div>
   );
