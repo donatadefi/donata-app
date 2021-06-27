@@ -10,8 +10,15 @@ function Main({ account }) {
     <div className="Main">
       {account ? (
         <Switch>
-          <Route exact path="/" component={Dashboard} />
-          <Route path="/setting" component={Setting} />
+          <Route
+            exact
+            path="/"
+            component={(props) => <Dashboard account={account} {...props} />}
+          />
+          <Route
+            path="/setting"
+            component={(props) => <Setting acount={account} {...props} />}
+          />
         </Switch>
       ) : (
         <p className="connect-notif">Please connect your wallet</p>

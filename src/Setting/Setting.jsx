@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Setting() {
+function Setting({ account }) {
   return (
     <div className="Setting">
       <p>Setting</p>
