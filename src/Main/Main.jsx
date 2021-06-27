@@ -17,7 +17,7 @@ function Main({ account }) {
           />
           <Route
             path="/setting"
-            component={(props) => <Setting acount={account} {...props} />}
+            component={(props) => <Setting account={account} {...props} />}
           />
         </Switch>
       ) : (
