@@ -1,5 +1,6 @@
 .Sidebar {
   min-height: 100vh;
+  position: fixed;
   background: rgb(54, 145, 223);
   background: linear-gradient(
     349deg,
@@ -31,7 +32,9 @@
       color: #ffffff;
       padding: 15px 25px;
       border-radius: 50px 0 0 50px;
+      box-sizing: border-box;
       margin-bottom: 15px;
+      font-weight: 600;
       &:hover {
         color: #000000;
       }

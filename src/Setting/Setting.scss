@@ -1,4 +1,7 @@
 .Setting {
+  .mt-30 {
+    margin-top: 30px;
+  }
   .user-detail {
     display: flex;
     .user-photo {
@@ -49,6 +52,26 @@
           outline: none;
         }
       }
+    }
+  }
+  .user-socials {
+    h3 {
+      margin-bottom: 15px;
+    }
+    display: flex;
+    justify-content: space-between;
+    & > div {
+      width: 48%;
+    }
+    .social-input {
+      display: flex;
+      margin-bottom: 15px;
+      svg {
+        margin-right: 20px;
+      }
+    }
+    button {
+      float: right;
     }
   }
 }

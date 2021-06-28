@@ -7,6 +7,7 @@ import Sidebar from './sidebar/Sidebar';
 import TopBar from './Topbar/Topbar';
 import Main from './Main/Main';
 
+import 'antd/dist/antd.css';
 import './App.scss';
 
 function App() {
