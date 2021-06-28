@@ -10,8 +10,15 @@ function Setting({ account }) {
           <div>Photo</div>
           <button>Upload Picture</button>
         </div>
-        <div>
-          <p>Description</p>
+        <div className="user-description">
+          <div>
+            <textarea
+              name="description"
+              id="1"
+              placeholder="Write your description here"
+            ></textarea>
+          </div>
+          <button>Set Description</button>
         </div>
       </div>
     </div>
