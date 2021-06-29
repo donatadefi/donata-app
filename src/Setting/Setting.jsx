@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from 'antd';
+import { Input, Checkbox } from 'antd';
 
 import './Setting.scss';
 
@@ -125,9 +125,22 @@ function Setting({ account }) {
 
         <div>
           <h3>Token Setting</h3>
-
           <div>
-            <p>token setting</p>
+            <Checkbox>Allow custom token</Checkbox>
+          </div>
+          <div className="token-choice">
+            <Input placeholder="Token Address" />
+            <button className="circle">-</button>
+            <p>Token Name</p>
+          </div>
+          <div className="token-choice">
+            <Input placeholder="Token Address" />
+            <button className="circle">-</button>
+            <p>Token Name</p>
+          </div>
+          <div className="token-action">
+            <button className="circle">+</button>
+            <button>Set</button>
           </div>
         </div>
       </div>
