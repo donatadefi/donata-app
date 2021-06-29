@@ -16,7 +16,7 @@ function Setting({ account }) {
             <textarea
               name="description"
               id="1"
-              placeholder="Write your description here"
+              placeholder="Short description"
             ></textarea>
           </div>
           <button>Set Description</button>
