@@ -75,6 +75,9 @@
     button {
       float: right;
       border: none;
+      width: 80px;
+      height: 30px;
+      border-radius: 30px;
     }
 
     .token-choice {
@@ -89,6 +92,11 @@
         margin-bottom: 0;
         margin-left: 10px;
       }
+      .remove {
+        background-color: #fd6363;
+        color: #ffffff;
+        font-weight: 600;
+      }
     }
     .token-action {
       margin-top: 10px;
@@ -97,16 +105,26 @@
       button {
         float: left;
         margin-right: 20px;
-        height: 30px;
-        width: 80px;
         border-radius: 30px;
         border: none;
+        color: #ffffff;
+        background-color: #50ab50;
+      }
+      .set-action {
+        background-color: #1c75e8;
+        color: #ffffff;
       }
     }
     .circle {
       width: 25px;
       height: 25px;
       border-radius: 50%;
+    }
+    .set-action {
+      background-color: #1c75e8;
+      color: #ffffff;
+      height: 30px;
+      width: 80px;
     }
   }
 }

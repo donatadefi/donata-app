@@ -120,7 +120,7 @@ function Setting({ account }) {
             </svg>
             <Input placeholder="URL" />
           </div>
-          <button>Set</button>
+          <button className="set-action">Set</button>
         </div>
 
         <div>
@@ -130,17 +130,17 @@ function Setting({ account }) {
           </div>
           <div className="token-choice">
             <Input placeholder="Token Address" />
-            <button className="circle">-</button>
+            <button className="circle remove">&#8722;</button>
             <p>Token Name</p>
           </div>
           <div className="token-choice">
             <Input placeholder="Token Address" />
-            <button className="circle">-</button>
+            <button className="circle remove">&#8722;</button>
             <p>Token Name</p>
           </div>
           <div className="token-action">
             <button className="circle">+</button>
-            <button>Set</button>
+            <button className="set-action">Set</button>
           </div>
         </div>
       </div>
