@@ -28,7 +28,7 @@ function Dashboard({ account }) {
             break;
           }
         }
-        setEthBalance(trimmedBalance.join(''));
+        setEthBalance(trimmedBalance.join('') + ' ' + 'ETH');
       }
     });
   }, []);
@@ -50,7 +50,11 @@ function Dashboard({ account }) {
       </div>
       <div className="out-links">
         <p>
-          <a className="zerion-link" href="">
+          <a
+            className="zerion-link"
+            href={`https://app.zerion.io/${account}/overview`}
+            target="_blank"
+          >
             {' '}
             Check all holdings value at ZERION
           </a>
