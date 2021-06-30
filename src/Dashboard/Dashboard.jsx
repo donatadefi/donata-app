@@ -1,14 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import web3 from 'web3';
 
 import './Dashboard.scss';
 
-function Dashboard() {
+const Web3 = new web3(
+  new web3.providers.HttpProvider(
+    'https://mainnet.infura.io/v3/5d77daec222d4ad994408839514891ee'
+  )
+);
+
+function Dashboard({ account }) {
+  const [ethBalance, setEthBalance] = useState('');
+  useEffect(() => {
+    Web3.eth.getBalance(account, function (err, result) {
+      if (err) {
+        console.log(err);
+      } else {
+        const blnc = web3.utils.fromWei(result, 'ether') + ' ETH';
+        let stopIdentifier = blnc.length;
+        const trimmedBalance = [];
+        for (let i = 0; i < blnc.length; i++) {
+          trimmedBalance.push(blnc.charAt(i));
+          if (blnc.charAt(i) === '.') {
+            stopIdentifier = i + 3;
+          }
+          if (i >= stopIdentifier) {
+            break;
+          }
+        }
+        setEthBalance(trimmedBalance.join(''));
+      }
+    });
+  }, []);
+
   return (
     <div className="Dashboard">
       <div className="balance">
         {/* <h3>Balance</h3> */}
         <p className="eth-balance">
-          3,4 ETH <span>$1,200 USD</span>
+          {ethBalance} <span>$1,200 USD</span>
         </p>
 
         <div className="tokens-balance">
