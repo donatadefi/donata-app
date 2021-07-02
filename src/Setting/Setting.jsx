@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input, Checkbox } from 'antd';
 
 import './Setting.scss';
 
+var ethUtil = require('ethereumjs-util');
+var sigUtil = require('eth-sig-util');
+
 function Setting({ account }) {
+  const [description, setDescription] = useState('');
+  const putDescription = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const sendDescription = async () => {};
+
   return (
     <div className="Setting">
       <div className="user-detail">
@@ -13,13 +23,14 @@ function Setting({ account }) {
         </div>
         <div className="user-description">
           <div>
-            <textarea
+            <Input.TextArea
               name="description"
               id="1"
               placeholder="Short description"
-            ></textarea>
+              onChange={putDescription}
+            ></Input.TextArea>
           </div>
-          <button>Set Description</button>
+          <button onClick={sendDescription}>Set Description</button>
         </div>
       </div>
       <div className="user-socials mt-30">
@@ -120,7 +131,25 @@ function Setting({ account }) {
             </svg>
             <Input placeholder="URL" />
           </div>
-          <button className="set-action">Set</button>
+          <div className="social-input">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="icon icon-tabler icon-tabler-brand-facebook"
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="#4267B2"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
+            </svg>
+            <Input placeholder="URL" />
+          </div>
+          <button className="set-action">Confirm</button>
         </div>
 
         <div>
@@ -140,7 +169,7 @@ function Setting({ account }) {
           </div>
           <div className="token-action">
             <button className="circle">+</button>
-            <button className="set-action">Set</button>
+            <button className="set-action">Confirm</button>
           </div>
         </div>
       </div>
