@@ -14,12 +14,94 @@ function Setting({ account }) {
 
   const sendDescription = async () => {};
 
+  const signData = () => {
+    const msgParams = JSON.stringify({
+      domain: {
+        chainId: 1,
+        name: 'Donata App',
+        //Donata contract here to verify
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+        version: '1',
+      },
+      // Defining the message signing data content.
+      message: {
+        action: 'Set Description',
+      },
+      // Refers to the keys of the *types* object below.
+      primaryType: 'Write',
+      types: {
+        Write: [{ name: 'action', type: 'string' }],
+      },
+    });
+
+    const from = account;
+
+    const params = [from, msgParams];
+    const method = 'eth_signTypedData_v4';
+    window.ethereum.sendAsync(
+      {
+        method,
+        params,
+        from,
+      },
+      function (err, result) {
+        if (err) return console.dir(err);
+        if (result.error) {
+          alert(result.error.message);
+        }
+        if (result.error) return console.error('ERROR', result);
+        console.log('TYPED SIGNED:' + JSON.stringify(result.result));
+
+        //use this on the backend
+        const recovered = sigUtil.recoverTypedSignature_v4({
+          //send these two as the request body, alongside any data you want to add
+          //send fetch to firebase from backend
+          //specify if its an update, write, or delete
+          data: JSON.parse(msgParams),
+          sig: result.result,
+        });
+
+        console.log(JSON.parse(msgParams));
+
+        if (
+          ethUtil.toChecksumAddress(recovered) ===
+          ethUtil.toChecksumAddress(from)
+        ) {
+          //do the fetch here, for a little extra security
+          const reqBody = {
+            data: JSON.parse(msgParams),
+            sig: result.result,
+            type: 'photo',
+          };
+          fetch('http://localhost:5000/db', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(reqBody),
+          })
+            .then((res) => {
+              res.json();
+            })
+            .then((status) => {
+              console.log(status);
+            });
+        } else {
+          alert(
+            'Failed to verify signer when comparing ' + result + ' to ' + from
+          );
+        }
+      }
+    );
+  };
+
   return (
     <div className="Setting">
       <div className="user-detail">
         <div className="user-photo">
           <div>Photo</div>
           <button>Upload Picture</button>
+          <button onClick={signData}>sign</button>
         </div>
         <div className="user-description">
           <div>
