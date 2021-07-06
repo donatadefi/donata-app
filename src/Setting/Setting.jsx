@@ -12,9 +12,10 @@ function Setting({ account }) {
     setDescription(e.target.value);
   };
 
-  const sendDescription = async () => {};
-
-  const signData = () => {
+  const signData = (type) => {
+    if (!description) {
+      return;
+    }
     const msgParams = JSON.stringify({
       domain: {
         chainId: 1,
@@ -25,7 +26,7 @@ function Setting({ account }) {
       },
       // Defining the message signing data content.
       message: {
-        action: 'Set Description',
+        action: `Set ${type}`,
       },
       // Refers to the keys of the *types* object below.
       primaryType: 'Write',
@@ -35,9 +36,13 @@ function Setting({ account }) {
     });
 
     const from = account;
-
     const params = [from, msgParams];
     const method = 'eth_signTypedData_v4';
+    const content = () => {
+      if (type == 'description') {
+        return description;
+      }
+    };
     window.ethereum.sendAsync(
       {
         method,
@@ -71,7 +76,8 @@ function Setting({ account }) {
           const reqBody = {
             data: JSON.parse(msgParams),
             sig: result.result,
-            type: 'photo',
+            type,
+            content: content(),
           };
           fetch('http://localhost:5000/db', {
             method: 'POST',
@@ -101,7 +107,6 @@ function Setting({ account }) {
         <div className="user-photo">
           <div>Photo</div>
           <button>Upload Picture</button>
-          <button onClick={signData}>sign</button>
         </div>
         <div className="user-description">
           <div>
@@ -112,7 +117,9 @@ function Setting({ account }) {
               onChange={putDescription}
             ></Input.TextArea>
           </div>
-          <button onClick={sendDescription}>Set Description</button>
+          <button onClick={() => signData('description')}>
+            Set Description
+          </button>
         </div>
       </div>
       <div className="user-socials mt-30">
