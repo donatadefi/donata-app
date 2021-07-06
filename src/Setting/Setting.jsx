@@ -66,8 +66,6 @@ function Setting({ account }) {
           sig: result.result,
         });
 
-        console.log(JSON.parse(msgParams));
-
         if (
           ethUtil.toChecksumAddress(recovered) ===
           ethUtil.toChecksumAddress(from)
@@ -81,13 +79,15 @@ function Setting({ account }) {
           };
           fetch('http://localhost:5000/db', {
             method: 'POST',
+            cache: 'no-cache',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(reqBody),
           })
             .then((res) => {
-              res.json();
+              console.log(res);
+              return res.json();
             })
             .then((status) => {
               console.log(status);
