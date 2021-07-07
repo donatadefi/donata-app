@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Input, Checkbox } from 'antd';
-
+import uuid from 'react-uuid';
 import './Setting.scss';
 
 var ethUtil = require('ethereumjs-util');
@@ -10,7 +10,14 @@ function Setting({ account }) {
   const [description, setDescription] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
   const [socials, setSocials] = useState({});
-  const [tokens, setTokens] = useState({});
+  const [customToken, setCustomToken] = useState(true);
+  const [tokensList, setTokensList] = useState([
+    {
+      id: uuid(),
+      address: '',
+      name: '',
+    },
+  ]);
 
   const putDescription = (e) => {
     setDescription(e.target.value);
@@ -22,15 +29,56 @@ function Setting({ account }) {
     });
   };
 
+  const setTokenAddress = (e, id) => {
+    const currentTokens = [...tokensList];
+    currentTokens.forEach((token, idx) => {
+      if (id === token.id) {
+        //this shit changes tokensList without re-render
+        currentTokens[idx].address = e.target.value;
+      }
+    });
+  };
+
+  const addToken = () => {
+    const currentTokens = [...tokensList];
+    setTokensList([
+      ...currentTokens,
+      {
+        id: uuid(),
+        address: '',
+        name: '',
+      },
+    ]);
+  };
+
+  const removeToken = (id) => {
+    const currentTokens = [...tokensList];
+    const newList = currentTokens.filter((token) => {
+      return token.id !== id;
+    });
+
+    setTokensList(newList);
+  };
+
+  const putCustomToken = (e) => {
+    setCustomToken(e.target.checked);
+  };
+
   const signData = (type) => {
     if (
       (!description && type === 'description') ||
       (!photoUrl && type === 'photoUrl') ||
-      (Object.keys(socials).length === 0 && type === 'socials') ||
-      (Object.keys(tokens).length === 0 && type === 'tokens')
+      (Object.keys(socials).length === 0 && type === 'socials')
     ) {
       return;
     }
+    const tokens = () => {
+      if (customToken) {
+        return tokensList;
+      } else {
+        return [];
+      }
+    };
     const msgParams = JSON.stringify({
       domain: {
         chainId: 1,
@@ -54,17 +102,17 @@ function Setting({ account }) {
     const params = [from, msgParams];
     const method = 'eth_signTypedData_v4';
     const content = () => {
-      if (type == 'description') {
+      if (type === 'description') {
         return description;
       }
-      if (type == 'photoUrl') {
+      if (type === 'photoUrl') {
         return photoUrl;
       }
-      if (type == 'socials') {
+      if (type === 'socials') {
         return socials;
       }
-      if (type == 'tokens') {
-        return tokens;
+      if (type === 'tokens') {
+        return tokens();
       }
     };
     window.ethereum.sendAsync(
@@ -99,6 +147,7 @@ function Setting({ account }) {
             data: JSON.parse(msgParams),
             sig: result.result,
             type,
+            customToken,
             content: content(),
           };
           fetch('http://localhost:5000/db', {
@@ -122,6 +171,30 @@ function Setting({ account }) {
         }
       }
     );
+  };
+
+  const renderTokens = () => {
+    return tokensList.map((token) => {
+      return (
+        <div
+          style={{ display: customToken ? 'flex' : 'none' }}
+          className="token-choice"
+          key={token.id}
+        >
+          <Input
+            placeholder="Token Address"
+            onChange={(e) => setTokenAddress(e, token.id)}
+          />
+          <button
+            className="circle remove"
+            onClick={() => removeToken(token.id)}
+          >
+            &#8722;
+          </button>
+          <p>Token Name</p>
+        </div>
+      );
+    });
   };
 
   return (
@@ -287,21 +360,22 @@ function Setting({ account }) {
         <div>
           <h3>Token Setting</h3>
           <div>
-            <Checkbox>Allow custom token</Checkbox>
+            <Checkbox onChange={putCustomToken} checked={customToken}>
+              Allow custom token
+            </Checkbox>
           </div>
-          <div className="token-choice">
-            <Input placeholder="Token Address" />
-            <button className="circle remove">&#8722;</button>
-            <p>Token Name</p>
-          </div>
-          <div className="token-choice">
-            <Input placeholder="Token Address" />
-            <button className="circle remove">&#8722;</button>
-            <p>Token Name</p>
-          </div>
+          {renderTokens()}
           <div className="token-action">
-            <button className="circle">+</button>
-            <button className="set-action">Confirm</button>
+            <button
+              style={{ display: customToken ? 'block' : 'none' }}
+              className="circle"
+              onClick={addToken}
+            >
+              +
+            </button>
+            <button className="set-action" onClick={() => signData('tokens')}>
+              Confirm
+            </button>
           </div>
         </div>
       </div>
