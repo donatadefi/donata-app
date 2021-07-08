@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Checkbox } from 'antd';
+import { Input, Checkbox, message } from 'antd';
 import uuid from 'react-uuid';
 import { getTokenName, getBalance } from '../helper';
 
@@ -129,6 +129,10 @@ function Setting({ account }) {
         return tokens();
       }
     };
+
+    message.loading({
+      content: 'Loading',
+    });
     window.ethereum.sendAsync(
       {
         method,
@@ -177,6 +181,9 @@ function Setting({ account }) {
             })
             .then((status) => {
               console.log(status);
+              message.success({
+                content: 'Success',
+              });
             });
         } else {
           alert(
