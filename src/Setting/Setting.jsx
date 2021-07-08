@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 import { Input, Checkbox } from 'antd';
 import uuid from 'react-uuid';
-import web3 from 'web3';
+import { getTokenName, getBalance } from '../helper';
+
 import './Setting.scss';
 
 var ethUtil = require('ethereumjs-util');
 var sigUtil = require('eth-sig-util');
-
-const Web3 = new web3(
-  new web3.providers.HttpProvider(
-    'https://mainnet.infura.io/v3/5d77daec222d4ad994408839514891ee'
-  )
-);
 
 function Setting({ account }) {
   const [description, setDescription] = useState('');
@@ -37,11 +32,23 @@ function Setting({ account }) {
   };
 
   const setTokenAddress = (e, id) => {
+    if (!e.target.value) {
+      return;
+    }
     const currentTokens = [...tokensList];
     currentTokens.forEach((token, idx) => {
       if (id === token.id) {
         //this shit changes tokensList without re-render
         currentTokens[idx].address = e.target.value;
+        getTokenName(e.target.value).then(function (result) {
+          if (result.status === 'error') {
+            currentTokens[idx].name = '';
+            setTokensList(currentTokens);
+            return;
+          }
+          currentTokens[idx].name = result;
+          setTokensList(currentTokens);
+        });
       }
     });
   };
@@ -180,38 +187,6 @@ function Setting({ account }) {
     );
   };
 
-  let tokenAddress = '0xfad45e47083e4607302aa43c65fb3106f1cd7607';
-  let walletAddress = account;
-  // The minimum ABI to get ERC20 Token balance
-  let minABI = [
-    // balanceOf
-    {
-      constant: true,
-      inputs: [{ name: '_owner', type: 'address' }],
-      name: 'balanceOf',
-      outputs: [{ name: 'balance', type: 'uint256' }],
-      type: 'function',
-    },
-    // decimals
-    {
-      constant: true,
-      inputs: [],
-      name: 'decimals',
-      outputs: [{ name: '', type: 'uint8' }],
-      type: 'function',
-    },
-  ];
-
-  let contract = new Web3.eth.Contract(minABI, tokenAddress);
-  async function getBalance() {
-    const balance = await contract.methods.balanceOf(walletAddress).call();
-    return balance;
-  }
-
-  getBalance().then(function (result) {
-    console.log(result);
-  });
-
   const renderTokens = () => {
     return tokensList.map((token) => {
       return (
@@ -230,7 +205,7 @@ function Setting({ account }) {
           >
             &#8722;
           </button>
-          <p>Token Name</p>
+          <p>{token.name}</p>
         </div>
       );
     });
