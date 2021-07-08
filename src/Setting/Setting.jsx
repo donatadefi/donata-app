@@ -130,9 +130,6 @@ function Setting({ account }) {
       }
     };
 
-    message.loading({
-      content: 'Loading',
-    });
     window.ethereum.sendAsync(
       {
         method,
@@ -168,6 +165,10 @@ function Setting({ account }) {
             customToken,
             content: content(),
           };
+          message.loading({
+            content: 'Loading',
+            key: 'u',
+          });
           fetch('http://localhost:5000/db', {
             method: 'POST',
             cache: 'no-cache',
@@ -183,6 +184,8 @@ function Setting({ account }) {
               console.log(status);
               message.success({
                 content: 'Success',
+                key: 'u',
+                duration: 1,
               });
             });
         } else {
