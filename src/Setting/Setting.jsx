@@ -21,6 +21,90 @@ function Setting({ account }) {
     },
   ]);
 
+  const uploadImage = (e) => {
+    const files = Array.from(e.target.files);
+    const formData = new FormData();
+    files.forEach((file, i) => {
+      formData.append(i, file);
+    });
+
+    const msgParams = JSON.stringify({
+      domain: {
+        chainId: 1,
+        name: 'Donata App',
+        //Donata contract here to verify
+        verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+        version: '1',
+      },
+      // Defining the message signing data content.
+      message: {
+        action: 'Set photo',
+      },
+      // Refers to the keys of the *types* object below.
+      primaryType: 'Write',
+      types: {
+        Write: [{ name: 'action', type: 'string' }],
+      },
+    });
+
+    const from = account;
+    const params = [from, msgParams];
+    const method = 'eth_signTypedData_v4';
+
+    window.ethereum.sendAsync(
+      {
+        method,
+        params,
+        from,
+      },
+      function (err, result) {
+        if (err) return console.dir(err);
+        if (result.error) {
+          alert(result.error.message);
+        }
+        if (result.error) return console.error('ERROR', result);
+        //console.log('TYPED SIGNED:' + JSON.stringify(result.result));
+
+        //use this on the backend
+        const recovered = sigUtil.recoverTypedSignature_v4({
+          //send these two as the request body, alongside any data you want to add
+          //send fetch to firebase from backend
+          //specify if its an update, write, or delete
+          data: JSON.parse(msgParams),
+          sig: result.result,
+        });
+
+        if (
+          ethUtil.toChecksumAddress(recovered) ===
+          ethUtil.toChecksumAddress(from)
+        ) {
+          //add additional details for sign data
+          formData.append('data', JSON.parse(JSON.stringify(msgParams)));
+          formData.append('sig', result.result);
+
+          message.loading({
+            content: 'Loading',
+            key: 'u',
+          });
+
+          fetch('http://localhost:5000/image', {
+            method: 'POST',
+            cache: 'no-cache',
+            body: formData,
+          })
+            .then((respons) => respons.json())
+            .then((result) => {
+              console.log(result);
+            });
+        } else {
+          alert(
+            'Failed to verify signer when comparing ' + result + ' to ' + from
+          );
+        }
+      }
+    );
+  };
+
   const putDescription = (e) => {
     setDescription(e.target.value);
   };
@@ -142,7 +226,7 @@ function Setting({ account }) {
           alert(result.error.message);
         }
         if (result.error) return console.error('ERROR', result);
-        console.log('TYPED SIGNED:' + JSON.stringify(result.result));
+        //console.log('TYPED SIGNED:' + JSON.stringify(result.result));
 
         //use this on the backend
         const recovered = sigUtil.recoverTypedSignature_v4({
@@ -226,7 +310,8 @@ function Setting({ account }) {
       <div className="user-detail">
         <div className="user-photo">
           <div>Photo</div>
-          <button>Upload Picture</button>
+          <input type="text" onChange={uploadImage} type="file" multiple />
+          {/* <button>Upload Picture</button> */}
         </div>
         <div className="user-description">
           <div>
