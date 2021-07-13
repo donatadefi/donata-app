@@ -32,26 +32,8 @@ function Topbar({ initAccount }) {
     return trimmedStr;
   };
 
-  const renderAvatar = () => {
-    if (!account) {
-      return;
-    }
-    if (account) {
-      //get avatar url from firestore
-      //console.log('avatar load');
-      return (
-        <img
-          src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn3.iconfinder.com%2Fdata%2Ficons%2Favatars-round-flat%2F33%2Fman5-512.png&f=1&nofb=1"
-          alt=""
-        />
-      );
-    }
-  };
-
   return (
     <div className="Topbar">
-      <div>{renderAvatar()}</div>
-
       <button onClick={connectWallet}>
         {account ? addressTrim(account) : 'CONNECT'}
       </button>
