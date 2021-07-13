@@ -11,6 +11,12 @@
         height: 250px;
         border: 3px solid #dedede;
         border-radius: 30px;
+        overflow: hidden;
+      }
+      img {
+        width: 300px;
+        height: 100%;
+        object-fit: cover;
       }
       button {
         width: 100%;
@@ -24,6 +30,14 @@
         &:focus {
           outline: none;
         }
+      }
+      input {
+        margin-top: 10px;
+        margin-bottom: 5px;
+      }
+      span {
+        color: #292929;
+        font-style: italic;
       }
     }
     .user-description {

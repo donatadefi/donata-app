@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Input, Checkbox, message } from 'antd';
 import uuid from 'react-uuid';
 import { getTokenName, getBalance } from '../helper';
@@ -11,7 +11,14 @@ var sigUtil = require('eth-sig-util');
 function Setting({ account }) {
   const [description, setDescription] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
-  const [socials, setSocials] = useState({});
+  const [socials, setSocials] = useState({
+    twitter: '',
+    youtube: '',
+    twitch: '',
+    instagram: '',
+    tiktok: '',
+    facebook: '',
+  });
   const [customToken, setCustomToken] = useState(true);
   const [tokensList, setTokensList] = useState([
     {
@@ -20,6 +27,27 @@ function Setting({ account }) {
       name: '',
     },
   ]);
+
+  useEffect(() => {
+    const reqBody = {
+      account,
+    };
+    fetch('http://localhost:5000/user', {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reqBody),
+    })
+      .then((resp) => resp.json())
+      .then((res) => {
+        setPhotoUrl(res.data.photoUrl);
+        setSocials(res.data.socials);
+        setDescription(res.data.description);
+        setTokensList(res.data.tokens);
+      });
+  }, []);
 
   const uploadImage = (e) => {
     const files = Array.from(e.target.files);
@@ -94,7 +122,35 @@ function Setting({ account }) {
           })
             .then((respons) => respons.json())
             .then((result) => {
-              console.log(result);
+              //console.log(result);
+              if (result.error) {
+                message.error({
+                  content: result.error,
+                  key: 'u',
+                  duration: 2,
+                });
+              } else {
+                const reqBody = {
+                  account,
+                };
+                fetch('http://localhost:5000/user', {
+                  method: 'POST',
+                  cache: 'no-cache',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(reqBody),
+                })
+                  .then((resp) => resp.json())
+                  .then((res) => {
+                    setPhotoUrl(res.data.photoUrl);
+                  });
+                message.success({
+                  content: 'Success',
+                  key: 'u',
+                  duration: 1,
+                });
+              }
             });
         } else {
           alert(
@@ -265,7 +321,23 @@ function Setting({ account }) {
               return res.json();
             })
             .then((status) => {
-              console.log(status);
+              const reqBody = {
+                account,
+              };
+              fetch('http://localhost:5000/user', {
+                method: 'POST',
+                cache: 'no-cache',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+              })
+                .then((resp) => resp.json())
+                .then((res) => {
+                  setSocials(res.data.socials);
+                  setDescription(res.data.description);
+                  setTokensList(res.data.tokens);
+                });
               message.success({
                 content: 'Success',
                 key: 'u',
@@ -292,6 +364,7 @@ function Setting({ account }) {
           <Input
             placeholder="Token Address"
             onChange={(e) => setTokenAddress(e, token.id)}
+            value={token.address}
           />
           <button
             className="circle remove"
@@ -309,8 +382,11 @@ function Setting({ account }) {
     <div className="Setting">
       <div className="user-detail">
         <div className="user-photo">
-          <div>Photo</div>
-          <input type="text" onChange={uploadImage} type="file" multiple />
+          <div>
+            <img src={photoUrl} alt="user-pic" />
+          </div>
+          <input onChange={uploadImage} type="file" id="x" />
+          <span>Maximum file size: 50Kb</span>
           {/* <button>Upload Picture</button> */}
         </div>
         <div className="user-description">
@@ -320,6 +396,7 @@ function Setting({ account }) {
               id="1"
               placeholder="Short description"
               onChange={putDescription}
+              value={description}
             ></Input.TextArea>
           </div>
           <button onClick={() => signData('description')}>
@@ -349,6 +426,7 @@ function Setting({ account }) {
             <Input
               placeholder="URL"
               onChange={(e) => putSocials(e, 'twitter')}
+              value={socials.twitter}
             />
           </div>
           <div className="social-input">
@@ -371,6 +449,7 @@ function Setting({ account }) {
             <Input
               placeholder="URL"
               onChange={(e) => putSocials(e, 'youtube')}
+              value={socials.youtube}
             />
           </div>
           <div className="social-input">
@@ -394,6 +473,7 @@ function Setting({ account }) {
             <Input
               placeholder="URL"
               onChange={(e) => putSocials(e, 'twitch')}
+              value={socials.twitch}
             />
           </div>
           <div className="social-input">
@@ -417,6 +497,7 @@ function Setting({ account }) {
             <Input
               placeholder="URL"
               onChange={(e) => putSocials(e, 'instagram')}
+              value={socials.instagram}
             />
           </div>
           <div className="social-input">
@@ -438,6 +519,7 @@ function Setting({ account }) {
             <Input
               placeholder="URL"
               onChange={(e) => putSocials(e, 'tiktok')}
+              value={socials.tiktok}
             />
           </div>
           <div className="social-input">
@@ -459,6 +541,7 @@ function Setting({ account }) {
             <Input
               placeholder="URL"
               onChange={(e) => putSocials(e, 'facebook')}
+              value={socials.facebook}
             />
           </div>
           <button className="set-action" onClick={() => signData('socials')}>
