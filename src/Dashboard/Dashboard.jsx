@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import web3 from 'web3';
+import { getBalance } from '../helper';
 
 import './Dashboard.scss';
 
@@ -11,6 +12,7 @@ const Web3 = new web3(
 
 function Dashboard({ account }) {
   const [ethBalance, setEthBalance] = useState('');
+  const [tokenList, setTokenList] = useState([]);
   useEffect(() => {
     Web3.eth.getBalance(account, function (err, result) {
       if (err) {
@@ -31,6 +33,38 @@ function Dashboard({ account }) {
         setEthBalance(trimmedBalance.join('') + ' ' + 'ETH');
       }
     });
+    const reqBody = {
+      account,
+    };
+    fetch('http://localhost:5000/user', {
+      method: 'POST',
+      cache: 'no-cache',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reqBody),
+    })
+      .then((resp) => resp.json())
+      .then((result) => {
+        if (result.data.tokens) {
+          const sometoken = [];
+          result.data.tokens.forEach((token) => {
+            if (token.address) {
+              getBalance(account, token.address).then((res) => {
+                const obj = {
+                  name: token.name,
+                  balance: res,
+                  address: token.address,
+                  id: token.id,
+                };
+                sometoken.push(obj);
+                setTokenList([...sometoken], obj);
+              });
+              // const tokenObj = tokenObjInit(token.id, token.name);
+            }
+          });
+        }
+      });
   }, []);
 
   return (
@@ -42,9 +76,13 @@ function Dashboard({ account }) {
         </p>
 
         <div className="tokens-balance">
-          <p>3,980,800 HOGE</p>
-          <p>2,000 DEXT</p>
-          <p>47,988,567,908 SHIB</p>
+          {tokenList.map((token) => {
+            return (
+              <p key={token.id}>
+                {token.balance} {token.name}
+              </p>
+            );
+          })}
         </div>
         <a href="https://etherscan.io">Check at Etherscan</a>
       </div>

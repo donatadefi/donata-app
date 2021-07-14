@@ -44,8 +44,17 @@ export const getBalance = async (walletAddress, tokenAddress) => {
   let contract = new Web3.eth.Contract(minABI, tokenAddress);
 
   const balance = await contract.methods.balanceOf(walletAddress).call();
+  const decimals = await contract.methods.decimals().call();
+  if (balance == 0) {
+    return '0';
+  }
 
-  return balance;
+  const decimalsLength = balance.length - Number(decimals);
+  const balanceTrimmed = balance.slice(0, decimalsLength + 2).split('');
+  balanceTrimmed.splice(balanceTrimmed.length - 2, 0, '.');
+  const r = [...balanceTrimmed].join('');
+
+  return r;
 };
 
 export const getTokenName = async (tokenAddress) => {

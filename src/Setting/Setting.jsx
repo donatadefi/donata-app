@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Checkbox, message } from 'antd';
 import uuid from 'react-uuid';
-import { getTokenName, getBalance } from '../helper';
+import { getTokenName } from '../helper';
 
 import './Setting.scss';
 
