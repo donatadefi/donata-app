@@ -42,10 +42,22 @@ function Setting({ account }) {
     })
       .then((resp) => resp.json())
       .then((res) => {
-        setPhotoUrl(res.data.photoUrl);
-        setSocials(res.data.socials);
-        setDescription(res.data.description);
-        setTokensList(res.data.tokens);
+        if (res.data.photoUrl) {
+          setPhotoUrl(res.data.photoUrl);
+        }
+        if (res.data.socials) {
+          setSocials(res.data.socials);
+        }
+        if (res.data.description) {
+          setDescription(res.data.description);
+        }
+        if (res.data.tokens) {
+          setTokensList(res.data.tokens);
+        }
+        // console.log(res.data);
+      })
+      .catch((err) => {
+        //console.log(err);
       });
   }, []);
 
@@ -129,6 +141,8 @@ function Setting({ account }) {
                   key: 'u',
                   duration: 2,
                 });
+                console.log(result);
+                return;
               } else {
                 const reqBody = {
                   account,
@@ -226,13 +240,13 @@ function Setting({ account }) {
     ) {
       return;
     }
-    const tokens = () => {
-      if (customToken) {
-        return tokensList;
-      } else {
-        return [];
-      }
-    };
+    // const tokens = () => {
+    //   if (customToken) {
+    //     return tokensList;
+    //   } else {
+    //     return [];
+    //   }
+    // };
     const msgParams = JSON.stringify({
       domain: {
         chainId: 1,
@@ -266,7 +280,7 @@ function Setting({ account }) {
         return socials;
       }
       if (type === 'tokens') {
-        return tokens();
+        return tokensList;
       }
     };
 
@@ -357,7 +371,7 @@ function Setting({ account }) {
     return tokensList.map((token) => {
       return (
         <div
-          style={{ display: customToken ? 'flex' : 'none' }}
+          // style={{ display: customToken ? 'flex' : 'none' }}
           className="token-choice"
           key={token.id}
         >
@@ -551,11 +565,11 @@ function Setting({ account }) {
 
         <div>
           <h3>Token Setting</h3>
-          <div>
+          {/* <div>
             <Checkbox onChange={putCustomToken} checked={customToken}>
               Allow custom token
             </Checkbox>
-          </div>
+          </div> */}
           {renderTokens()}
           <div className="token-action">
             <button
