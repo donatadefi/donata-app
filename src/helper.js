@@ -68,3 +68,7 @@ export const getTokenName = async (tokenAddress) => {
     };
   }
 };
+
+export const getEthPrice = () => {
+  return fetch('http://localhost:5000/eth_price');
+};

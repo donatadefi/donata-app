@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import web3 from 'web3';
-import { getBalance } from '../helper';
+import { getBalance, getEthPrice } from '../helper';
 
 import './Dashboard.scss';
 
@@ -13,6 +13,7 @@ const Web3 = new web3(
 function Dashboard({ account }) {
   const [ethBalance, setEthBalance] = useState('');
   const [tokenList, setTokenList] = useState([]);
+  const [ethusdBalance, setEthUsdBalance] = useState('');
   useEffect(() => {
     Web3.eth.getBalance(account, function (err, result) {
       if (err) {
@@ -31,6 +32,18 @@ function Dashboard({ account }) {
           }
         }
         setEthBalance(trimmedBalance.join('') + ' ' + 'ETH');
+
+        getEthPrice()
+          .then((res) => res.json())
+          .then((data) => {
+            const bal =
+              Number(trimmedBalance.join('')) * Number(data.data.result.ethusd);
+            const currencyConvert = new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            });
+            setEthUsdBalance(currencyConvert.format(bal));
+          });
       }
     });
     const reqBody = {
@@ -72,7 +85,7 @@ function Dashboard({ account }) {
       <div className="balance">
         {/* <h3>Balance</h3> */}
         <p className="eth-balance">
-          {ethBalance} <span>$1,200 USD</span>
+          {ethBalance} <span>{ethusdBalance}</span>
         </p>
 
         <div className="tokens-balance">
