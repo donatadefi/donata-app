@@ -1,11 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Sidebar from './sidebar/Sidebar';
 import TopBar from './Topbar/Topbar';
 import Main from './Main/Main';
+import FrontPage from './Home/FrontPage';
 
 import 'antd/dist/antd.css';
 import './App.scss';
@@ -27,18 +27,27 @@ function App() {
     setAccount(acc);
   };
 
+  const mainComponent = () => {
+    return (
+      <div className="parent-flex">
+        <div className="parent-left">
+          <Sidebar />
+        </div>
+        <div className="parent-right">
+          <TopBar initAccount={initAccount} />
+          <Main account={account} />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <BrowserRouter>
       <div className="App">
-        <div className="parent-flex">
-          <div className="parent-left">
-            <Sidebar></Sidebar>
-          </div>
-          <div className="parent-right">
-            <TopBar initAccount={initAccount}></TopBar>
-            <Main account={account}></Main>
-          </div>
-        </div>
+        <Switch>
+          <Route exact path="/frontpage" component={FrontPage} />
+          <Route path="/" component={mainComponent} />
+        </Switch>
       </div>
     </BrowserRouter>
   );
