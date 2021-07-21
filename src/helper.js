@@ -69,6 +69,11 @@ export const getTokenName = async (tokenAddress) => {
   }
 };
 
+export const addressTrim = (str) => {
+  const trimmedStr = str.slice(0, 6) + '...' + str.slice(38);
+  return trimmedStr;
+};
+
 export const getEthPrice = () => {
   return fetch('http://localhost:5000/eth_price');
 };

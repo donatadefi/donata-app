@@ -110,13 +110,6 @@ function Dashboard({ account }) {
             Check all holdings value at ZERION
           </a>
         </p>
-        {/* <h3>Last 5 Txn</h3>
-        <a href="https://etherscan.io/tx/0xc7687c6976123b37d6c7ae0041bcc590c633e42b220b872807aca426f15e208d">
-          0xc7687c6976123b37d6c7ae0041bcc590c633e42b220b872807aca426f15e208d
-        </a>
-        <a href="https://etherscan.io/tx/0xc7687c6976123b37d6c7ae0041bcc590c633e42b220b872807aca426f15e208d">
-          0xc7687c6976123b37d6c7ae0041bcc590c633e42b220b872807aca426f15e208d
-        </a> */}
       </div>
     </div>
   );

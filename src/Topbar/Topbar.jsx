@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import { addressTrim } from '../helper';
+
 import './Topbar.scss';
 
 function Topbar({ initAccount }) {
@@ -25,11 +27,6 @@ function Topbar({ initAccount }) {
     const acc = accounts[0];
     setAccount(acc);
     initAccount(acc);
-  };
-
-  const addressTrim = (str) => {
-    const trimmedStr = str.slice(0, 6) + '...' + str.slice(38);
-    return trimmedStr;
   };
 
   return (

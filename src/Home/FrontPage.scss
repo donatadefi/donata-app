@@ -1,3 +1,40 @@
 .FrontPage {
-  background-color: grey;
+  padding: 20px;
+  width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 15px;
+  .front-child {
+    border: 2px solid
+      linear-gradient(
+        349deg,
+        rgba(54, 188, 223, 1) 0%,
+        rgba(26, 120, 232, 1) 100%
+      );
+    box-sizing: border-box;
+    border-radius: 20px;
+    overflow: hidden;
+    img {
+      width: 100%;
+    }
+    .name-wrapper {
+      background: rgb(54, 188, 223);
+      background: linear-gradient(
+        349deg,
+        rgba(54, 188, 223, 1) 0%,
+        rgba(26, 120, 232, 1) 100%
+      );
+      color: #fff;
+      font-weight: bold;
+      padding: 15px 10px;
+      text-align: center;
+    }
+    .front-details {
+      padding: 15px;
+      box-sizing: border-box;
+      border-left: 2px solid #eaeaea;
+      border-right: 2px solid #eaeaea;
+    }
+  }
 }
