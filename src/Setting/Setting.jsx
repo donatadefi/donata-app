@@ -21,6 +21,7 @@ function Setting({ account }) {
     instagram: '',
     tiktok: '',
     facebook: '',
+    userAddress: account,
   });
   const [tokensList, setTokensList] = useState([
     {
