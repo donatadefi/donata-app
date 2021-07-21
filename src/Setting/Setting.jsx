@@ -11,6 +11,9 @@ var sigUtil = require('eth-sig-util');
 function Setting({ account }) {
   const [description, setDescription] = useState('');
   const [photoUrl, setPhotoUrl] = useState('');
+  const [userName, setUserName] = useState('');
+  const [photoFile, setPhotoFile] = useState('');
+
   const [socials, setSocials] = useState({
     twitter: '',
     youtube: '',
@@ -19,7 +22,6 @@ function Setting({ account }) {
     tiktok: '',
     facebook: '',
   });
-  const [customToken, setCustomToken] = useState(true);
   const [tokensList, setTokensList] = useState([
     {
       id: uuid(),
@@ -42,19 +44,11 @@ function Setting({ account }) {
     })
       .then((resp) => resp.json())
       .then((res) => {
-        if (res.data.photoUrl) {
-          setPhotoUrl(res.data.photoUrl);
-        }
-        if (res.data.socials) {
-          setSocials(res.data.socials);
-        }
-        if (res.data.description) {
-          setDescription(res.data.description);
-        }
-        if (res.data.tokens) {
-          setTokensList(res.data.tokens);
-        }
-        // console.log(res.data);
+        setSocials(res.data.socials);
+        setDescription(res.data.description);
+        setTokensList(res.data.tokensList);
+        setUserName(res.data.userName);
+        setPhotoUrl(res.data.photoUrl);
       })
       .catch((err) => {
         //console.log(err);
@@ -62,129 +56,20 @@ function Setting({ account }) {
   }, []);
 
   const uploadImage = (e) => {
-    if (e.target.files[0]) {
+    if (e.target.files[0].size > 50000) {
       message.error('File is too big', 4);
       return;
     }
+
+    console.log(e.target.files);
     const files = Array.from(e.target.files);
-    const formData = new FormData();
-    files.forEach((file, i) => {
-      formData.append(i, file);
-    });
 
     const reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
     reader.onloadend = (e) => {
       setPhotoUrl(reader.result);
+      setPhotoFile(files);
     };
-
-    // setPhotoUrl(objectUrl);
-
-    // const msgParams = JSON.stringify({
-    //   domain: {
-    //     chainId: 1,
-    //     name: 'Donata App',
-    //     //Donata contract here to verify
-    //     verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
-    //     version: '1',
-    //   },
-    //   // Defining the message signing data content.
-    //   message: {
-    //     action: 'Set photo',
-    //   },
-    //   // Refers to the keys of the *types* object below.
-    //   primaryType: 'Write',
-    //   types: {
-    //     Write: [{ name: 'action', type: 'string' }],
-    //   },
-    // });
-
-    // const from = account;
-    // const params = [from, msgParams];
-    // const method = 'eth_signTypedData_v4';
-
-    // window.ethereum.sendAsync(
-    //   {
-    //     method,
-    //     params,
-    //     from,
-    //   },
-    //   function (err, result) {
-    //     if (err) return console.dir(err);
-    //     if (result.error) {
-    //       alert(result.error.message);
-    //     }
-    //     if (result.error) return console.error('ERROR', result);
-    //     //console.log('TYPED SIGNED:' + JSON.stringify(result.result));
-
-    //     //use this on the backend
-    //     const recovered = sigUtil.recoverTypedSignature_v4({
-    //       //send these two as the request body, alongside any data you want to add
-    //       //send fetch to firebase from backend
-    //       //specify if its an update, write, or delete
-    //       data: JSON.parse(msgParams),
-    //       sig: result.result,
-    //     });
-
-    //     if (
-    //       ethUtil.toChecksumAddress(recovered) ===
-    //       ethUtil.toChecksumAddress(from)
-    //     ) {
-    //       //add additional details for sign data
-    //       formData.append('data', JSON.parse(JSON.stringify(msgParams)));
-    //       formData.append('sig', result.result);
-
-    //       message.loading({
-    //         content: 'Loading',
-    //         key: 'u',
-    //       });
-
-    //       fetch('http://localhost:5000/image', {
-    //         method: 'POST',
-    //         cache: 'no-cache',
-    //         body: formData,
-    //       })
-    //         .then((respons) => respons.json())
-    //         .then((result) => {
-    //           //console.log(result);
-    //           if (result.error) {
-    //             message.error({
-    //               content: result.error,
-    //               key: 'u',
-    //               duration: 2,
-    //             });
-    //             console.log(result);
-    //             return;
-    //           } else {
-    //             const reqBody = {
-    //               account,
-    //             };
-    //             fetch('http://localhost:5000/user', {
-    //               method: 'POST',
-    //               cache: 'no-cache',
-    //               headers: {
-    //                 'Content-Type': 'application/json',
-    //               },
-    //               body: JSON.stringify(reqBody),
-    //             })
-    //               .then((resp) => resp.json())
-    //               .then((res) => {
-    //                 setPhotoUrl(res.data.photoUrl);
-    //               });
-    //             message.success({
-    //               content: 'Success',
-    //               key: 'u',
-    //               duration: 1,
-    //             });
-    //           }
-    //         });
-    //     } else {
-    //       alert(
-    //         'Failed to verify signer when comparing ' + result + ' to ' + from
-    //       );
-    //     }
-    //   }
-    // );
   };
 
   const putDescription = (e) => {
@@ -241,14 +126,6 @@ function Setting({ account }) {
   };
 
   const signData = (type) => {
-    if (
-      (!description && type === 'description') ||
-      (!photoUrl && type === 'photoUrl') ||
-      (Object.keys(socials).length === 0 && type === 'socials')
-    ) {
-      return;
-    }
-
     const msgParams = JSON.stringify({
       domain: {
         chainId: 1,
@@ -259,7 +136,7 @@ function Setting({ account }) {
       },
       // Defining the message signing data content.
       message: {
-        action: `Set ${type}`,
+        action: 'Sign to save your settings',
       },
       // Refers to the keys of the *types* object below.
       primaryType: 'Write',
@@ -271,20 +148,6 @@ function Setting({ account }) {
     const from = account;
     const params = [from, msgParams];
     const method = 'eth_signTypedData_v4';
-    const content = () => {
-      if (type === 'description') {
-        return description;
-      }
-      if (type === 'photoUrl') {
-        return photoUrl;
-      }
-      if (type === 'socials') {
-        return socials;
-      }
-      if (type === 'tokens') {
-        return tokensList;
-      }
-    };
 
     window.ethereum.sendAsync(
       {
@@ -309,18 +172,35 @@ function Setting({ account }) {
           sig: result.result,
         });
 
+        const json = JSON.stringify({
+          userName,
+          description,
+          socials,
+          tokensList,
+          photoFile,
+          data: JSON.parse(msgParams),
+          sig: result.result,
+        });
+        const blob = new Blob([json], {
+          type: 'application/json',
+        });
+
+        const files = photoFile;
+        const formData = new FormData();
+        if (files) {
+          files.forEach((file, i) => {
+            formData.append(i, file);
+          });
+        }
+
+        formData.append('document', blob);
+
         if (
           ethUtil.toChecksumAddress(recovered) ===
           ethUtil.toChecksumAddress(from)
         ) {
           //do the fetch here, for a little extra security
-          const reqBody = {
-            data: JSON.parse(msgParams),
-            sig: result.result,
-            type,
-            customToken,
-            content: content(),
-          };
+
           message.loading({
             content: 'Loading',
             key: 'u',
@@ -328,10 +208,10 @@ function Setting({ account }) {
           fetch('http://localhost:5000/db', {
             method: 'POST',
             cache: 'no-cache',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(reqBody),
+            // headers: {
+            //   'Content-Type': 'application/json',
+            // },
+            body: formData,
           })
             .then((res) => {
               return res.json();
@@ -352,7 +232,9 @@ function Setting({ account }) {
                 .then((res) => {
                   setSocials(res.data.socials);
                   setDescription(res.data.description);
-                  setTokensList(res.data.tokens);
+                  setTokensList(res.data.tokensList);
+                  setUserName(res.data.userName);
+                  setPhotoUrl(res.data.photoUrl);
                 });
               message.success({
                 content: 'Success',
@@ -406,7 +288,11 @@ function Setting({ account }) {
             <span>Maximum file size: 50Kb</span>
             {/* <button>Upload Picture</button> */}
           </div>
-          <Input placeholder="Your name" />
+          <Input
+            placeholder="Your name"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+          />
           <div className="user-description">
             <div>
               <Input.TextArea
@@ -439,7 +325,7 @@ function Setting({ account }) {
                 <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
               </svg>
               <Input
-                placeholder="URL"
+                placeholder="Twitter URL"
                 onChange={(e) => putSocials(e, 'twitter')}
                 value={socials.twitter}
               />
@@ -462,7 +348,7 @@ function Setting({ account }) {
                 <path d="M10 9l5 3l-5 3z" />
               </svg>
               <Input
-                placeholder="URL"
+                placeholder="YouTube URL"
                 onChange={(e) => putSocials(e, 'youtube')}
                 value={socials.youtube}
               />
@@ -486,7 +372,7 @@ function Setting({ account }) {
                 <line x1="12" y1="8" x2="12" y2="12" />
               </svg>
               <Input
-                placeholder="URL"
+                placeholder="Twitch URL"
                 onChange={(e) => putSocials(e, 'twitch')}
                 value={socials.twitch}
               />
@@ -510,7 +396,7 @@ function Setting({ account }) {
                 <line x1="16.5" y1="7.5" x2="16.5" y2="7.501" />
               </svg>
               <Input
-                placeholder="URL"
+                placeholder="Instagram URL"
                 onChange={(e) => putSocials(e, 'instagram')}
                 value={socials.instagram}
               />
@@ -532,7 +418,7 @@ function Setting({ account }) {
                 <path d="M9 12a4 4 0 1 0 4 4v-12a5 5 0 0 0 5 5" />
               </svg>
               <Input
-                placeholder="URL"
+                placeholder="TikTok URL"
                 onChange={(e) => putSocials(e, 'tiktok')}
                 value={socials.tiktok}
               />
@@ -554,7 +440,7 @@ function Setting({ account }) {
                 <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
               </svg>
               <Input
-                placeholder="URL"
+                placeholder="Facebook URL"
                 onChange={(e) => putSocials(e, 'facebook')}
                 value={socials.facebook}
               />
@@ -565,7 +451,7 @@ function Setting({ account }) {
           </div>
 
           <div>
-            <h3>Token Setting</h3>
+            <h3>Featured Tokens</h3>
             {/* <div>
             <Checkbox onChange={putCustomToken} checked={customToken}>
               Allow custom token
@@ -587,7 +473,9 @@ function Setting({ account }) {
           </div>
         </div>
       </div>
-      <button className="save-settings">Save Settings</button>
+      <button className="save-settings" onClick={signData}>
+        Save Settings
+      </button>
     </div>
   );
 }

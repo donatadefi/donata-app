@@ -59,23 +59,27 @@ function Dashboard({ account }) {
     })
       .then((resp) => resp.json())
       .then((result) => {
-        if (result.data.tokens) {
-          const sometoken = [];
-          result.data.tokens.forEach((token) => {
-            if (token.address) {
-              getBalance(account, token.address).then((res) => {
-                const obj = {
-                  name: token.name,
-                  balance: res,
-                  address: token.address,
-                  id: token.id,
-                };
-                sometoken.push(obj);
-                setTokenList([...sometoken], obj);
-              });
-              // const tokenObj = tokenObjInit(token.id, token.name);
-            }
-          });
+        if (result.data) {
+          if (result.data.tokens) {
+            const sometoken = [];
+            result.data.tokens.forEach((token) => {
+              if (token.address) {
+                getBalance(account, token.address).then((res) => {
+                  const obj = {
+                    name: token.name,
+                    balance: res,
+                    address: token.address,
+                    id: token.id,
+                  };
+                  sometoken.push(obj);
+                  setTokenList([...sometoken], obj);
+                });
+                // const tokenObj = tokenObjInit(token.id, token.name);
+              }
+            });
+          }
+        } else {
+          return;
         }
       });
   }, []);
