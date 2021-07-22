@@ -60,9 +60,9 @@ function Dashboard({ account }) {
       .then((resp) => resp.json())
       .then((result) => {
         if (result.data) {
-          if (result.data.tokens) {
+          if (result.data.tokensList) {
             const sometoken = [];
-            result.data.tokens.forEach((token) => {
+            result.data.tokensList.forEach((token) => {
               if (token.address) {
                 getBalance(account, token.address).then((res) => {
                   const obj = {
