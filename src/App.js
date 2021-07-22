@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Sidebar from './sidebar/Sidebar';
 import TopBar from './Topbar/Topbar';
 import Main from './Main/Main';
-import FrontPage from './Home/FrontPage';
+// import FrontPage from './Home/FrontPage';
 
 import 'antd/dist/antd.css';
 import './App.scss';
@@ -45,7 +45,7 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Switch>
-          <Route exact path="/frontpage" component={FrontPage} />
+          {/* <Route exact path="/frontpage" component={FrontPage} /> */}
           <Route path="/" component={mainComponent} />
         </Switch>
       </div>
