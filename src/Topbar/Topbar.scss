@@ -8,10 +8,10 @@
     border: none;
     border-radius: 50px;
     font-weight: 600;
-    background-color: #318ce1;
+    background: #2c56d2;
     color: #ffffff;
     &:hover {
-      background-color: lighten(#1384d9, 5);
+      background-color: lighten(#2c56d2, 5);
     }
     cursor: pointer;
     &:focus {

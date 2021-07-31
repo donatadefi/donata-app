@@ -1,12 +1,7 @@
 .Sidebar {
   min-height: 100vh;
   position: fixed;
-  background: rgb(54, 145, 223);
-  background: linear-gradient(
-    349deg,
-    rgba(54, 145, 223, 1) 0%,
-    rgba(26, 115, 232, 1) 100%
-  );
+  background: linear-gradient(to right, #2b36a2 0%, #1b1b58 100%);
   width: 280px;
   .sidebar-logo {
     display: flex;

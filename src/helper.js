@@ -61,7 +61,11 @@ export const getTokenName = async (tokenAddress) => {
   try {
     let contract = new Web3.eth.Contract(minABI, tokenAddress);
     const name = await contract.methods.name().call();
-    return name;
+    const decimals = await contract.methods.decimals().call();
+    return {
+      name,
+      decimals,
+    };
   } catch (err) {
     return {
       status: 'error',

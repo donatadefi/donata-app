@@ -97,7 +97,9 @@ function Setting({ account }) {
             setTokensList(currentTokens);
             return;
           }
-          currentTokens[idx].name = result;
+          currentTokens[idx].name = result.name;
+          currentTokens[idx].decimals = result.decimals;
+
           setTokensList(currentTokens);
         });
       }
