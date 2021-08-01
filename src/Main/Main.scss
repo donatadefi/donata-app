@@ -1,5 +1,14 @@
+@mixin phone {
+  @media (max-width: 1100px) {
+    @content;
+  }
+}
+
 .Main {
   padding: 40px 50px 50px 330px;
+  @include phone {
+    padding: 30px;
+  }
   .connect-notif {
     position: absolute;
     top: 50%;
