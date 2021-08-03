@@ -23,15 +23,31 @@ function Topbar({ initAccount }) {
   }, [ethereum]);
 
   const connectWallet = async () => {
-    if (!ethereum && deviceType() === 'desktop') {
-      return;
-    }
     if (account) {
       return;
     }
-    if (deviceType() !== 'desktop') {
+
+    //device is desktop, no mm installed
+    if (!ethereum && deviceType() === 'desktop') {
+      return;
+    }
+
+    //device is desktop, mm installed
+    if (deviceType() === 'desktop' && ethereum) {
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      const acc = accounts[0];
+      setAccount(acc);
+      initAccount(acc);
+    }
+    //device is mobile, outside mm
+    if (deviceType() !== 'desktop' && !ethereum) {
       setOpenModal(true);
-    } else {
+    }
+
+    //devicve is mobile, inside mm
+    if (deviceType() !== 'desktop' && ethereum) {
       const accounts = await ethereum.request({
         method: 'eth_requestAccounts',
       });
