@@ -99,6 +99,7 @@ function Setting({ account }) {
           }
           currentTokens[idx].name = result.name;
           currentTokens[idx].decimals = result.decimals;
+          currentTokens[idx].symbol = result.symbol;
 
           setTokensList(currentTokens);
         });
@@ -272,7 +273,7 @@ function Setting({ account }) {
           >
             &#8722;
           </button>
-          <p>{token.name}</p>
+          <p>{token.symbol}</p>
         </div>
       );
     });

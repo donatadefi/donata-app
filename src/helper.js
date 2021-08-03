@@ -38,6 +38,20 @@ let minABI = [
     stateMutability: 'view',
     type: 'function',
   },
+  //symbol
+  {
+    constant: true,
+    inputs: [],
+    name: 'symbol',
+    outputs: [
+      {
+        name: '',
+        type: 'string',
+      },
+    ],
+    payable: false,
+    type: 'function',
+  },
 ];
 
 export const getBalance = async (walletAddress, tokenAddress) => {
@@ -62,9 +76,11 @@ export const getTokenName = async (tokenAddress) => {
     let contract = new Web3.eth.Contract(minABI, tokenAddress);
     const name = await contract.methods.name().call();
     const decimals = await contract.methods.decimals().call();
+    const symbol = await contract.methods.symbol().call();
     return {
       name,
       decimals,
+      symbol,
     };
   } catch (err) {
     return {
