@@ -31,25 +31,31 @@ function Dashboard({ account }) {
             break;
           }
         }
-        setEthBalance(trimmedBalance.join('') + ' ' + 'ETH');
 
-        getEthPrice()
-          .then((res) => res.json())
-          .then((data) => {
-            const bal =
-              Number(trimmedBalance.join('')) * Number(data.data.result.ethusd);
-            const currencyConvert = new Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
+        if (trimmedBalance[1] === ' ') {
+          setEthBalance(' 0 ETH');
+          setEthUsdBalance('$0');
+        } else {
+          setEthBalance(trimmedBalance.join('') + ' ' + 'ETH');
+          getEthPrice()
+            .then((res) => res.json())
+            .then((data) => {
+              const bal =
+                Number(trimmedBalance.join('')) *
+                Number(data.data.result.ethusd);
+              const currencyConvert = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              });
+              setEthUsdBalance(currencyConvert.format(bal));
             });
-            setEthUsdBalance(currencyConvert.format(bal));
-          });
+        }
       }
     });
     const reqBody = {
       account,
     };
-    fetch('http://localhost:5000/user', {
+    fetch('https://donatedefi.finance/user', {
       method: 'POST',
       cache: 'no-cache',
       headers: {

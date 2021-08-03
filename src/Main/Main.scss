@@ -17,5 +17,8 @@
     font-size: 24px;
     font-weight: 600;
     transform: translate(-50%, -50%);
+    @include phone {
+      left: 50%;
+    }
   }
 }

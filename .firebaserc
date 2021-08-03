@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "donata-a696d"
+  },
+  "targets": {
+    "donata-a696d": {
+      "hosting": {
+        "donata-app": [
+          "donata-app"
+        ]
+      }
+    }
+  }
+}

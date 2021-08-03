@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { addressTrim } from '../helper';
+import { addressTrim, deviceType } from '../helper';
 
 import './Topbar.scss';
 
@@ -9,30 +9,48 @@ function Topbar({ initAccount }) {
   const { ethereum } = window;
   const [account, setAccount] = useState('');
   const [showMenu, setShowMenu] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    ethereum.request({ method: 'eth_accounts' }).then((addr) => {
-      if (addr.length > 0) {
-        setAccount(addr[0]);
-        initAccount(addr[0]);
-      }
-    });
-  }, []);
+    if (ethereum) {
+      ethereum.request({ method: 'eth_accounts' }).then((addr) => {
+        if (addr.length > 0) {
+          setAccount(addr[0]);
+          initAccount(addr[0]);
+        }
+      });
+    }
+  }, [ethereum]);
 
   const connectWallet = async () => {
+    if (!ethereum && deviceType() === 'desktop') {
+      return;
+    }
     if (account) {
       return;
     }
-    const accounts = await ethereum.request({
-      method: 'eth_requestAccounts',
-    });
-    const acc = accounts[0];
-    setAccount(acc);
-    initAccount(acc);
+    if (deviceType() !== 'desktop') {
+      setOpenModal(true);
+    } else {
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      const acc = accounts[0];
+      setAccount(acc);
+      initAccount(acc);
+    }
   };
 
   return (
     <div className="Topbar">
+      <div className="modal" style={{ display: openModal ? 'block' : 'none' }}>
+        <div>
+          <a href="https://metamask.app.link/dapp/donata-app.web.app">
+            Open MetaMask
+          </a>
+          <p onClick={() => setOpenModal(false)}>close</p>
+        </div>
+      </div>
       <div className="hamburger-menu" onClick={() => setShowMenu(!showMenu)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

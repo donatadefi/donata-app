@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { deviceType } from './helper';
 
 import Sidebar from './sidebar/Sidebar';
 import TopBar from './Topbar/Topbar';
@@ -13,17 +14,25 @@ import './App.scss';
 function App() {
   const { ethereum } = window;
   const [account, setAccount] = useState('');
+  const [isMeta, setIsMeta] = useState(true);
 
   useEffect(() => {
-    //this checks whether the account already connected or not
-    ethereum.request({ method: 'eth_accounts' }).then((addr) => {
-      if (addr.length > 0) {
-        setAccount(addr[0]);
-      }
-    });
-  }, []);
+    if (!ethereum) {
+      setIsMeta(false);
+    } else {
+      // setIsMeta(true);
+      ethereum.request({ method: 'eth_accounts' }).then((addr) => {
+        if (addr.length > 0) {
+          setAccount(addr[0]);
+        }
+      });
+    }
+  }, [ethereum]);
 
   const initAccount = (acc) => {
+    if (!acc) {
+      return;
+    }
     setAccount(acc);
   };
 
@@ -36,6 +45,16 @@ function App() {
         <div className="parent-right">
           <TopBar initAccount={initAccount} />
           <Main account={account} />
+          {!isMeta && (
+            <a
+              className="install-mm"
+              href="https://metamask.io"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Install MetaMask
+            </a>
+          )}
         </div>
       </div>
     );

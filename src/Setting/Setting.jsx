@@ -34,7 +34,7 @@ function Setting({ account }) {
     const reqBody = {
       account,
     };
-    fetch('http://localhost:5000/user', {
+    fetch('https://donatedefi.finance/user', {
       method: 'POST',
       cache: 'no-cache',
       headers: {
@@ -207,7 +207,7 @@ function Setting({ account }) {
             content: 'Loading',
             key: 'u',
           });
-          fetch('http://localhost:5000/db', {
+          fetch('https://donatedefi.finance/db', {
             method: 'POST',
             cache: 'no-cache',
             // headers: {
@@ -222,7 +222,7 @@ function Setting({ account }) {
               const reqBody = {
                 account,
               };
-              fetch('http://localhost:5000/user', {
+              fetch('https://donatedefi.finance/user', {
                 method: 'POST',
                 cache: 'no-cache',
                 headers: {
