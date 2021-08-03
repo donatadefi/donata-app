@@ -86,9 +86,18 @@ function Topbar({ initAccount }) {
           <line x1="4" y1="18" x2="20" y2="18" />
         </svg>
       </div>
+
       <button onClick={connectWallet}>
         {account ? addressTrim(account) : 'CONNECT'}
       </button>
+      <a
+        href={`https://donata-homepage.web.app/user/${account}`}
+        target="_blank"
+        rel="noreferrer noopener"
+        className="my-page"
+      >
+        My Page
+      </a>
 
       <div className="mobile-menu" style={{ right: showMenu ? '0' : '-100%' }}>
         <svg
