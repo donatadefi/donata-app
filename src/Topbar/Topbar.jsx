@@ -91,7 +91,7 @@ function Topbar({ initAccount }) {
         {account ? addressTrim(account) : 'CONNECT'}
       </button>
       <a
-        href={`https://donata-homepage.web.app/user/${account}`}
+        href={`https://donata.social/user/${account}`}
         target="_blank"
         rel="noreferrer noopener"
         className="my-page"
